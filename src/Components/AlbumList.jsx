@@ -1,58 +1,40 @@
-import React from "react";
-import {Card } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
-function AlbumList() {
-  const [data, setData] = useState([]);
+import { Card } from "react-bootstrap";
+import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import FORM_MODE from "../constants/formMode";
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "https://jsonplaceholder.typicode.com/albums"
-        );
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const jsonData = await response.json();
-        setData(jsonData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+function AlbumList({ albums, setMode, setCurrentUpdateData }) {
   return (
-    <>
-      <div className="card-container">
-        {data.map((item) => (
-          <Card
-            className="card"
-            key={item.id}
-            style={{
-              width: "18rem",
-            }}
-          >
-            <h5>{item.title}</h5>
-            <p>{item.userId}</p>
+    <div className="container">
+      {albums.map((item) => (
+        <Card className="card p-3 mt-2" key={item.id}>
+          <Card.Body>
+            <Card.Title>{item.title}</Card.Title>
+            <Card.Text>{item.userId}</Card.Text>
 
-            <div className="footer">
-              <img
-                src="https://cdn-icons-png.flaticon.com/128/6861/6861362.png"
-                alt=""
+            <div className="d-flex justify-content-end mt-2 gap-2">
+              <PencilIcon
+                height="16px"
+                width="16px"
+                onClick={() => {
+                  setMode(FORM_MODE.UPDATE);
+                  setCurrentUpdateData(item);
+                }}
               />
-              <img
-                src="https://cdn-icons-png.flaticon.com/128/15007/15007343.png"
-                alt=""
-              />
+              <TrashIcon height="16px" width="16px" />
             </div>
-          </Card>
-        ))}
-      </div>
-    </>
+          </Card.Body>
+        </Card>
+      ))}
+    </div>
   );
 }
+
+AlbumList.propTypes = {
+  albums: PropTypes.array.isRequired,
+  setMode: PropTypes.func.isRequired,
+  setCurrentUpdateData: PropTypes.func.isRequired,
+};
 
 export default AlbumList;
