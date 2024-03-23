@@ -36,10 +36,7 @@ function App() {
     };
 
     try {
-      const response = await fetch(
-        URI,
-        options
-      );
+      const response = await fetch(URI, options);
       const data = await response.json();
       console.log(data);
       setAlbums([...albums, { ...data, id: albums.length + 1 }]);
@@ -50,7 +47,7 @@ function App() {
   };
 
   // update(PUT) data to album list
-  const updateAlbumData = async (albumData) => {
+  const updateAlbumData = async (id, albumData) => {
     const options = {
       method: "PUT",
       body: JSON.stringify(albumData),
@@ -59,11 +56,15 @@ function App() {
       },
     };
     try {
-      const response = await fetch(
-        URI,
-        options
+      const response = await fetch(`${URI}/${id}`, options);
+
+      const deleteData = await response.json();
+      setAlbums((albums) =>
+        albums.map((album) =>
+          album.id === id ? { ...album, ...albumData } : album
+        )
       );
-      console.log(response);
+      console.log(deleteData);
     } catch (error) {
       console.log(error);
     }
@@ -71,28 +72,27 @@ function App() {
 
   // Delete data from Album list
   const deleteAlbumListData = async (id) => {
-    const conform = window.confirm("Are you sure you want to delete")
-    if (conform.ok) {
-      const options = {
-        method: "DELETE",
-      };
-      try {
-        const response = await fetch(
-          URI+id,
-          options
-        );
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-      }
+    const confirmed = confirm("Are you sure you want to delete");
+    if (!confirmed) return;
+
+    const options = {
+      method: "DELETE",
+    };
+
+    try {
+      const response = await fetch(`${URI}/${id}`, options);
+      const data = await response.json();
+
+      setAlbums((albums) => albums.filter((album) => album.id !== id));
+
+      console.log(data);
+    } catch (error) {
+      console.log(error);
     }
-    
   };
 
   useEffect(() => {
     fetchData();
-    deleteAlbumListData();
-
   }, []);
 
   return (
@@ -104,11 +104,13 @@ function App() {
         albumData={albumData}
         setAlbumData={setAlbumData}
         setMode={setMode}
+        updateAlbumData={updateAlbumData}
       />
       <AlbumList
         albums={albums}
         setMode={setMode}
         setCurrentUpdateData={setAlbumData}
+        deleteAlbumListData={deleteAlbumListData}
       />
     </>
   );

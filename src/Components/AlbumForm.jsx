@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import FORM_MODE from "../constants/formMode";
 import { useEffect, useState } from "react";
 
-const AlbumForm = ({ mode, onSubmit, albumData, setAlbumData, setMode }) => {
+const AlbumForm = ({ mode, onSubmit, albumData, setAlbumData, setMode, updateAlbumData}) => {
   const cardTitle = mode === FORM_MODE.CREATE ? "Create" : "Update";
 
   const [userId, setUserId] = useState("");
@@ -14,10 +14,19 @@ const AlbumForm = ({ mode, onSubmit, albumData, setAlbumData, setMode }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({
-      userId,
-      title,
-    });
+    if(mode === FORM_MODE.CREATE){
+      onSubmit({
+        userId,
+        title,
+      });
+    }else{
+      console.log(title, userId);
+      updateAlbumData(albumData.id, {
+        title, userId
+      } )
+
+    }
+    
 
     setUserId("");
     setTitle("");
@@ -87,6 +96,7 @@ AlbumForm.propTypes = {
   albumData: PropTypes.object,
   setAlbumData: PropTypes.func.isRequired,
   setMode: PropTypes.func.isRequired,
+  updateAlbumData:PropTypes.func.isRequired
 };
 
 export default AlbumForm;

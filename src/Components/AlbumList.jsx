@@ -36,8 +36,7 @@ function AlbumList({
                 width="20px"
                 cursor="pointer"
                 onClick={() => {
-                  setMode(FORM_MODE.DELETE);
-                  deleteAlbumListData(item);
+                  deleteAlbumListData(item.id);
                 }}
               />
             </div>
@@ -52,7 +51,7 @@ AlbumList.propTypes = {
   albums: PropTypes.array.isRequired,
   setMode: PropTypes.func.isRequired,
   setCurrentUpdateData: PropTypes.func.isRequired,
-  deleteAlbumListData: PropTypes.object,
+  deleteAlbumListData: PropTypes.func.isRequired,
 };
 
 export default AlbumList;
