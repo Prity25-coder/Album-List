@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react";
 
-import { AlbumForm } from "./Components";
-import Nav from "./Components/Nav";
-import AlbumList from "./Components/AlbumList";
+import { AlbumForm, AlbumList, Nav } from "./Components";
 import FORM_MODE from "./constants/formMode";
 
 import "./App.css";
+
+const URI = "https://jsonplaceholder.typicode.com/albums";
 
 function App() {
   const [albums, setAlbums] = useState([]);
   const [mode, setMode] = useState(FORM_MODE.CREATE);
   const [albumData, setAlbumData] = useState(null);
 
+  // Fetch data from album json placeholder API
   const fetchData = async () => {
     try {
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/albums"
-      );
+      const response = await fetch(URI);
       const data = await response.json();
       console.log(data);
       setAlbums(data);
@@ -26,6 +25,7 @@ function App() {
     }
   };
 
+  // Add data to album list
   const onSubmit = async (albumData) => {
     const options = {
       method: "POST",
@@ -34,9 +34,10 @@ function App() {
         "Content-type": "application/json; charset=UTF-8",
       },
     };
+
     try {
       const response = await fetch(
-        "https://jsonplaceholder.typicode.com/albums",
+        URI,
         options
       );
       const data = await response.json();
@@ -48,8 +49,50 @@ function App() {
     }
   };
 
+  // update(PUT) data to album list
+  const updateAlbumData = async (albumData) => {
+    const options = {
+      method: "PUT",
+      body: JSON.stringify(albumData),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    };
+    try {
+      const response = await fetch(
+        URI,
+        options
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Delete data from Album list
+  const deleteAlbumListData = async (id) => {
+    const conform = window.confirm("Are you sure you want to delete")
+    if (conform.ok) {
+      const options = {
+        method: "DELETE",
+      };
+      try {
+        const response = await fetch(
+          URI+id,
+          options
+        );
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    
+  };
+
   useEffect(() => {
     fetchData();
+    deleteAlbumListData();
+
   }, []);
 
   return (

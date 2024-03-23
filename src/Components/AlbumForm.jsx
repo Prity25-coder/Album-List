@@ -36,8 +36,8 @@ const AlbumForm = ({ mode, onSubmit, albumData, setAlbumData, setMode }) => {
   }, [mode, albumData]);
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Card className="m-2">
+    <Form onSubmit={handleSubmit} >
+      <Card className="m-2 border border-success">
         <Card.Body>
           <Card.Title>{cardTitle} Album</Card.Title>
           <div>
