@@ -12,6 +12,7 @@
 
 - Delete an album, make a DELETE call to the above url. (Again this is a dummy call).
 
+![image](https://github.com/Prity25-coder/Album-List/assets/72591232/88238d5f-b787-4d58-b12b-28ba0a623c9e)
 
 
 ### Live Demo Link:-
